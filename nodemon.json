@@ -1,0 +1,8 @@
+{
+  "ignore": ["*.js"],
+  "watch": ["src/"],
+  "extension": ["ts"],
+  "options": {
+    "extensions": ["ts"]
+  }
+}
