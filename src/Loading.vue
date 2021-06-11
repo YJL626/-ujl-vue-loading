@@ -1,6 +1,7 @@
 <template>
   <div
-    class="loader-container"
+    v-show="isShow"
+    class="loading-container"
     :style="containerStyle"
     style="
       display: flex;
@@ -9,28 +10,54 @@
       background-color: #ffffff90;
     "
   >
-    <img :src="imgSrc" />
+    <img class="loading-img" :src="imgSrc" />
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, h } from 'vue-demi'
 import puffBase64 from './svg-loaders/puff.svg'
-
+import { defineComponent, HTMLAttributes, ref, Ref, watch } from 'vue'
 export default defineComponent({
   props: {
-    width: { type: String, default: '100px' },
-    height: { type: String, default: '100px' },
-    top: { type: String, default: '100px' },
-    left: { type: String, default: '100px' },
-    position: { type: String, default: 'fixed' },
+    el: { type: Element },
     imgSrc: { type: String, default: puffBase64 },
   },
   setup(props) {
-    const containerStyle = computed(() => {
-      const { width, height, top, left, position } = props
-      return { width, height, top, left, position }
-    })
-    return { containerStyle }
+    const isShow = ref(false)
+    const containerStyle = ref({
+      width: '0',
+      height: '0',
+      top: '0',
+      left: '0',
+      position: 'absolute',
+    }) as Ref<HTMLAttributes>
+    const addPx = (str: string | number) => str + 'px'
+    watch(
+      props,
+      () => {
+        if (!props.el) return (isShow.value = false)
+        isShow.value = true
+        let {
+          x = 0,
+          y = 0,
+          width = 0,
+          height = 0,
+        } = props.el.getBoundingClientRect
+          ? props.el.getBoundingClientRect()
+          : {}
+        x += window.scrollX
+        y += window.scrollY
+        containerStyle.value = {
+          width: addPx(width),
+          height: addPx(height),
+          top: addPx(y),
+          left: addPx(x),
+          position: 'absolute',
+          zIndex: '9',
+        } as HTMLAttributes
+      },
+      { immediate: true }
+    )
+    return { containerStyle, isShow }
   },
 })
 </script>
