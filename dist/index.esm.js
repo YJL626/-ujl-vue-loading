@@ -61,12 +61,19 @@ var img$1 = "data:image/svg+xml,%3c!-- By Sam Herbert (%40sherb)%2c for everyone
 var img = "data:image/svg+xml,%3c!-- By Sam Herbert (%40sherb)%2c for everyone. More %40 http://goo.gl/7AJzbL --%3e%3csvg width='120' height='12' viewBox='0 0 120 30' xmlns='http://www.w3.org/2000/svg' fill='%2353A8FF'%3e %3ccircle cx='15' cy='15' r='15'%3e %3canimate attributeName='r' from='15' to='15' begin='0s' dur='0.8s' values='15%3b9%3b15' calcMode='linear' repeatCount='indefinite' /%3e %3canimate attributeName='fill-opacity' from='1' to='1' begin='0s' dur='0.8s' values='1%3b.5%3b1' calcMode='linear' repeatCount='indefinite' /%3e %3c/circle%3e %3ccircle cx='60' cy='15' r='9' fill-opacity='0.3'%3e %3canimate attributeName='r' from='9' to='9' begin='0s' dur='0.8s' values='9%3b15%3b9' calcMode='linear' repeatCount='indefinite' /%3e %3canimate attributeName='fill-opacity' from='0.5' to='0.5' begin='0s' dur='0.8s' values='.5%3b1%3b.5' calcMode='linear' repeatCount='indefinite' /%3e %3c/circle%3e %3ccircle cx='105' cy='15' r='15'%3e %3canimate attributeName='r' from='15' to='15' begin='0s' dur='0.8s' values='15%3b9%3b15' calcMode='linear' repeatCount='indefinite' /%3e %3canimate attributeName='fill-opacity' from='1' to='1' begin='0s' dur='0.8s' values='1%3b.5%3b1' calcMode='linear' repeatCount='indefinite' /%3e %3c/circle%3e%3c/svg%3e";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const loadingContainer = document.createElement('div');
-const LoadingVueProp = ref({
-    el: null,
-    imgSrc: img$2,
-});
+const createLoading = (LoadingProps) => {
+    const loadingContainer = document.createElement('div');
+    createApp({
+        render: () => h(script, LoadingProps.value),
+    }).mount(loadingContainer);
+    return loadingContainer;
+};
 function directiveCb(el, binding) {
+    const LoadingProp = ref({
+        el: null,
+        imgSrc: img$2,
+    });
+    const loadingContainer = createLoading(LoadingProp);
     let imgSrc;
     switch (binding.arg) {
         case 'oval':
@@ -81,19 +88,16 @@ function directiveCb(el, binding) {
         default:
             imgSrc = img$2;
     }
-    LoadingVueProp.value = {
+    LoadingProp.value = {
         el: binding.value ? el : null,
         imgSrc,
     };
     if (el.style.position) {
         el.style.position = 'relative';
     }
-    LoadingVueProp.value.el && el.append(loadingContainer);
+    LoadingProp.value.el && el.append(loadingContainer);
 }
 const loading = (app) => {
-    createApp({
-        render: () => h(script, LoadingVueProp.value),
-    }).mount(loadingContainer);
     app.directive('loading', directiveCb);
 };
 

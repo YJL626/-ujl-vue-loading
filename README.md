@@ -12,16 +12,14 @@
 
 ```js
 
-/* �S�N�Ǐ OeQ
-NT�v�SpeRbcload img */
 
-<NavBar v-y-loading="true" />
+<NavBar v-loading="true" />
 
-<NavBar v-y-loading:oval="true" />
+<NavBar v-loading:oval="true" />
 
-<NavBar v-y-loading:dot="true" />
+<NavBar v-loading:dot="true" />
 
-<NavBar v-y-loading:puff="true" /> by default
+<NavBar v-loading:puff="true" /> by default
 
 
 
