@@ -34,7 +34,10 @@ export default defineComponent({
     watch(
       props,
       () => {
-        if (!props.el) return (isShow.value = false)
+        if (!props.el) {
+          isShow.value = false
+          return
+        }
         isShow.value = true
         let {
           x = 0,
