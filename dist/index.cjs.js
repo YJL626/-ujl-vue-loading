@@ -36,7 +36,7 @@ var script = vue.defineComponent({
                 top: addPx(y),
                 left: addPx(x),
                 position: 'absolute',
-                zIndex: '9',
+                zIndex: '99',
             };
         }, { immediate: true });
         return { containerStyle, isShow };
@@ -44,17 +44,18 @@ var script = vue.defineComponent({
 });
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return vue.withDirectives((vue.openBlock(), vue.createBlock("div", {
-    class: "loading-container",
-    style: [_ctx.containerStyle, {"display":"flex","justify-content":"center","align-items":"center","background-color":"#ffffff90"}]
-  }, [
-    vue.createVNode("img", {
-      class: "loading-img",
-      src: _ctx.imgSrc
-    }, null, 8 /* PROPS */, ["src"])
-  ], 4 /* STYLE */)), [
-    [vue.vShow, _ctx.isShow]
-  ])
+  return (_ctx.isShow)
+    ? (vue.openBlock(), vue.createBlock("div", {
+        key: 0,
+        class: "loading-container",
+        style: [_ctx.containerStyle, {"display":"flex","justify-content":"center","align-items":"center","background-color":"#ffffff90"}]
+      }, [
+        vue.createVNode("img", {
+          class: "loading-img",
+          src: _ctx.imgSrc
+        }, null, 8 /* PROPS */, ["src"])
+      ], 4 /* STYLE */))
+    : vue.createCommentVNode("v-if", true)
 }
 
 script.render = render;

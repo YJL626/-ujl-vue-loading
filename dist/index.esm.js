@@ -1,4 +1,4 @@
-import { defineComponent, ref, watch, withDirectives, openBlock, createBlock, createVNode, vShow, createApp, h } from 'vue';
+import { defineComponent, ref, watch, openBlock, createBlock, createVNode, createCommentVNode, createApp, h } from 'vue';
 
 var img$2 = "data:image/svg+xml,%3c!-- By Sam Herbert (%40sherb)%2c for everyone. More %40 http://goo.gl/7AJzbL --%3e%3csvg width='44' height='44' viewBox='0 0 44 44' xmlns='http://www.w3.org/2000/svg' stroke='%2353A8FF'%3e %3cg fill='none' fill-rule='evenodd' stroke-width='2'%3e %3ccircle cx='22' cy='22' r='1'%3e %3canimate attributeName='r' begin='0s' dur='1.8s' values='1%3b 20' calcMode='spline' keyTimes='0%3b 1' keySplines='0.165%2c 0.84%2c 0.44%2c 1' repeatCount='indefinite' /%3e %3canimate attributeName='stroke-opacity' begin='0s' dur='1.8s' values='1%3b 0' calcMode='spline' keyTimes='0%3b 1' keySplines='0.3%2c 0.61%2c 0.355%2c 1' repeatCount='indefinite' /%3e %3c/circle%3e %3ccircle cx='22' cy='22' r='1'%3e %3canimate attributeName='r' begin='-0.9s' dur='1.8s' values='1%3b 20' calcMode='spline' keyTimes='0%3b 1' keySplines='0.165%2c 0.84%2c 0.44%2c 1' repeatCount='indefinite' /%3e %3canimate attributeName='stroke-opacity' begin='-0.9s' dur='1.8s' values='1%3b 0' calcMode='spline' keyTimes='0%3b 1' keySplines='0.3%2c 0.61%2c 0.355%2c 1' repeatCount='indefinite' /%3e %3c/circle%3e %3c/g%3e%3c/svg%3e";
 
@@ -32,7 +32,7 @@ var script = defineComponent({
                 top: addPx(y),
                 left: addPx(x),
                 position: 'absolute',
-                zIndex: '9',
+                zIndex: '99',
             };
         }, { immediate: true });
         return { containerStyle, isShow };
@@ -40,17 +40,18 @@ var script = defineComponent({
 });
 
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return withDirectives((openBlock(), createBlock("div", {
-    class: "loading-container",
-    style: [_ctx.containerStyle, {"display":"flex","justify-content":"center","align-items":"center","background-color":"#ffffff90"}]
-  }, [
-    createVNode("img", {
-      class: "loading-img",
-      src: _ctx.imgSrc
-    }, null, 8 /* PROPS */, ["src"])
-  ], 4 /* STYLE */)), [
-    [vShow, _ctx.isShow]
-  ])
+  return (_ctx.isShow)
+    ? (openBlock(), createBlock("div", {
+        key: 0,
+        class: "loading-container",
+        style: [_ctx.containerStyle, {"display":"flex","justify-content":"center","align-items":"center","background-color":"#ffffff90"}]
+      }, [
+        createVNode("img", {
+          class: "loading-img",
+          src: _ctx.imgSrc
+        }, null, 8 /* PROPS */, ["src"])
+      ], 4 /* STYLE */))
+    : createCommentVNode("v-if", true)
 }
 
 script.render = render;

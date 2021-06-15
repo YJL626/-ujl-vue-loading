@@ -1,6 +1,6 @@
 <template>
   <div
-    v-show="isShow"
+    v-if="isShow"
     class="loading-container"
     :style="containerStyle"
     style="
@@ -52,7 +52,7 @@ export default defineComponent({
           top: addPx(y),
           left: addPx(x),
           position: 'absolute',
-          zIndex: '9',
+          zIndex: '99',
         } as HTMLAttributes
       },
       { immediate: true }
