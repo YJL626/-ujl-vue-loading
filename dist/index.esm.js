@@ -71,11 +71,13 @@ const createLoading = (LoadingProps) => {
     }).mount(loadingContainer);
     return loadingContainer;
 };
-function directiveCb(el, binding) {
+const loadingPropsMap = new WeakMap();
+function directiveCbMounted(el, binding) {
     const LoadingProp = ref({
         el: null,
         imgSrc: img$2,
     });
+    loadingPropsMap.set(el, LoadingProp);
     const loadingContainer = createLoading(LoadingProp);
     let imgSrc;
     switch (binding.arg) {
@@ -95,13 +97,22 @@ function directiveCb(el, binding) {
         el: binding.value ? el : null,
         imgSrc,
     };
-    if (el.style.position) {
+    if (!el.style.position) {
         el.style.position = 'relative';
     }
     LoadingProp.value.el && el.append(loadingContainer);
 }
+const directiveCbUpdated = (el, binding) => {
+    const props = loadingPropsMap.get(el);
+    if (!props)
+        return;
+    props.value.el = binding.value ? el : null;
+};
 const loading = (app) => {
-    app.directive('loading', directiveCb);
+    app.directive('loading', {
+        mounted: directiveCbMounted,
+        updated: directiveCbUpdated,
+    });
 };
 
 export { loading };

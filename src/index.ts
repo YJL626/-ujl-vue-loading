@@ -6,9 +6,11 @@ import dotBase64 from './svg-loaders/three-dots.svg'
 import puffBase64 from './svg-loaders/puff.svg'
 type removeUndefined<T> = T extends undefined ? never : T
 type PluginInstallFunction = removeUndefined<Plugin['install']>
-const createLoading = (
-  LoadingProps: Ref<{ el: Element | null; imgSrc: string }>
-) => {
+//el为null时子组件隐藏
+type loadingProps = Ref<{ el: Element | null; imgSrc: string }>
+
+const loadingPropsMap = new WeakMap<HTMLDivElement, loadingProps>()
+const createLoading = (LoadingProps: loadingProps) => {
   const loadingContainer = document.createElement('div')
   createApp({
     render: () => h(LoadingVue as any, LoadingProps.value),
@@ -16,11 +18,15 @@ const createLoading = (
   return loadingContainer
 }
 
-function directiveCb(el: HTMLDivElement, binding: DirectiveBinding<boolean>) {
-  const LoadingProp = ref<{ el: Element | null; imgSrc: string }>({
+function directiveCbMounted(
+  el: HTMLDivElement,
+  binding: DirectiveBinding<boolean>
+) {
+  const LoadingProp: loadingProps = ref({
     el: null,
     imgSrc: puffBase64,
   })
+  loadingPropsMap.set(el, LoadingProp)
   const loadingContainer = createLoading(LoadingProp)
   let imgSrc
   switch (binding.arg) {
@@ -40,13 +46,24 @@ function directiveCb(el: HTMLDivElement, binding: DirectiveBinding<boolean>) {
     el: binding.value ? el : null,
     imgSrc,
   }
-  if (el.style.position) {
+  if (!el.style.position) {
     el.style.position = 'relative'
   }
   LoadingProp.value.el && el.append(loadingContainer)
 }
+const directiveCbUpdated = (
+  el: HTMLDivElement,
+  binding: DirectiveBinding<boolean>
+) => {
+  const props = loadingPropsMap.get(el)
+  if (!props) return
+  props.value.el = binding.value ? el : null
+}
 const loading: PluginInstallFunction = (app: App) => {
-  app.directive('loading', directiveCb)
+  app.directive('loading', {
+    mounted: directiveCbMounted,
+    updated: directiveCbUpdated,
+  })
 }
 
 export { loading }
