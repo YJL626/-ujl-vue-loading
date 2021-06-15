@@ -19,8 +19,10 @@ var loading = (function (exports, vue) {
           });
           const addPx = (str) => str + 'px';
           vue.watch(props, () => {
-              if (!props.el)
-                  return (isShow.value = false);
+              if (!props.el) {
+                  isShow.value = false;
+                  return;
+              }
               isShow.value = true;
               let { x = 0, y = 0, width = 0, height = 0, } = props.el.getBoundingClientRect
                   ? props.el.getBoundingClientRect()
